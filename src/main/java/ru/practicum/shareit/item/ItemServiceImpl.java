@@ -42,12 +42,10 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private User getUser(long userId) {
-        User owner;
         try {
-            owner = UserRowMapper.toUser(userRepository.getById(userId));
+            return UserRowMapper.toUser(userRepository.getById(userId));
         } catch (IllegalArgumentException e) {
             throw new NotFoundException(e.getMessage());
         }
-        return owner;
     }
 }

@@ -87,10 +87,14 @@ public class ItemRepositoryImpl implements ItemRepository {
     public List<ItemDto> search(User user, String text) {
         if (text.isEmpty()) {
             return new ArrayList<>();
-        } else return items.stream()
-                .filter(i -> i.getDescription().toUpperCase().contains(text.toUpperCase()) && i.getAvailable() && !text.isEmpty())
-                .map(ItemDtoRowMapper::toItemDto)
-                .collect(Collectors.toList());
+        } else {
+            return items.stream()
+                    .filter(i -> i.getDescription() != null
+                            && i.getDescription().toUpperCase().contains(text.toUpperCase())
+                            && i.getAvailable() && !text.isEmpty())
+                    .map(ItemDtoRowMapper::toItemDto)
+                    .collect(Collectors.toList());
+        }
     }
 
     private void validateUser(User user, Item item) {
