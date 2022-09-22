@@ -9,6 +9,7 @@ import ru.practicum.shareit.exception.ConflictException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Getter
@@ -73,7 +74,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     private void validateEmail(String email) {
         users.forEach(user -> {
-            if (user.getEmail().equals(email)) {
+            if (Objects.equals(user.getEmail(), email)) {
                 throw new ConflictException(MessageFormat.format("User with email: {0} already exists", user.getEmail()));
             }
         });
