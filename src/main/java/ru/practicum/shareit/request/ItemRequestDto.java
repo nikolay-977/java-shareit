@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
  * TODO Sprint add-item-requests.
  */
 @Data
-public class ItemRequest {
+public class ItemRequestDto {
     private long id;
     private String description;
     private User requestor;
