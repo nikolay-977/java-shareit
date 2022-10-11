@@ -21,33 +21,31 @@ public class UserRepositoryImpl implements UserRepository {
 
     private final ObjectMapper objectMapper;
 
-    private long userId = 0;
+    private Long userId = 0L;
 
     @Override
-    public UserDto create(User user) {
+    public User create(User user) {
         validateEmail(user.getEmail());
         user.setId(++userId);
         users.add(user);
-        return UserRowMapper.toUserDto(user);
+        return user;
     }
 
     @Override
-    public UserDto getById(long userId) {
-        return UserRowMapper.toUserDto(users.stream()
+    public User getById(Long userId) {
+        return users.stream()
                 .filter(user -> user.getId() == userId)
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("User not found")));
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 
     @Override
-    public List<UserDto> getAll() {
-        return users.stream()
-                .map(UserRowMapper::toUserDto)
-                .collect(Collectors.toList());
+    public List<User> getAll() {
+        return users;
     }
 
     @Override
-    public UserDto update(User user, long userId) {
+    public User update(User user, Long userId) {
         validateEmail(user.getEmail());
         User userToUpdate = users.stream()
                 .filter(u -> u.getId() == userId)
@@ -65,10 +63,10 @@ public class UserRepositoryImpl implements UserRepository {
         delete(userToUpdate.getId());
         users.add(userToUpdate);
 
-        return UserRowMapper.toUserDto(userToUpdate);
+        return userToUpdate;
     }
 
-    public void delete(long userId) {
+    public void delete(Long userId) {
         users.removeIf(user -> user.getId() == userId);
     }
 

@@ -1,5 +1,7 @@
 package ru.practicum.shareit.item;
 
+import ru.practicum.shareit.user.UserRowMapper;
+
 /**
  * TODO Sprint add-controllers.
  */
@@ -11,7 +13,7 @@ public class ItemDtoRowMapper {
                 item.getName(),
                 item.getDescription(),
                 item.getAvailable(),
-                item.getOwner(),
+                UserRowMapper.toUserDto(item.getOwner()),
                 item.getRequest()
         );
     }
@@ -22,7 +24,7 @@ public class ItemDtoRowMapper {
                 itemDto.getName(),
                 itemDto.getDescription(),
                 itemDto.getAvailable(),
-                itemDto.getOwner(),
+                itemDto.getOwner() != null ? UserRowMapper.toUser(itemDto.getOwner()) : null,
                 itemDto.getRequest()
         );
     }

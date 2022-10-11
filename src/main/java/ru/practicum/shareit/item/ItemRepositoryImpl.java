@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.UserDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,18 +22,18 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     private final ObjectMapper objectMapper;
 
-    private long itemId = 0;
+    private Long itemId = 0L;
 
     @Override
-    public ItemDto create(User user, Item item) {
+    public Item create(User user, Item item) {
         item.setId(++itemId);
         item.setOwner(user);
         items.add(item);
-        return ItemDtoRowMapper.toItemDto(item);
+        return item;
     }
 
     @Override
-    public ItemDto update(User user, Item item, long id) {
+    public Item update(User user, Item item, Long id) {
         Item itemToUpdate = items.stream()
                 .filter(i -> i.getId() == id)
                 .findAny()
@@ -58,41 +60,39 @@ public class ItemRepositoryImpl implements ItemRepository {
         delete(itemToUpdate.getId());
         items.add(itemToUpdate);
 
-        return ItemDtoRowMapper.toItemDto(itemToUpdate);
+        return itemToUpdate;
     }
 
     @Override
-    public ItemDto getById(User user, long itemId) {
-        Item item = items.stream()
-                .filter(i -> i.getId() == itemId)
+    public Item getById(User user, Long itemId) {
+        return items.stream()
+                .filter(item -> item.getId() == itemId)
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("Item not found"));
-        return ItemDtoRowMapper.toItemDto(item);
     }
 
     @Override
-    public List<ItemDto> getAll(long userId) {
+    public List<Item> getAll(Long userId) {
         return items.stream()
                 .filter(i -> i.getOwner().getId() == userId)
-                .map(ItemDtoRowMapper::toItemDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         items.removeIf(item -> item.getId() == id);
     }
 
     @Override
-    public List<ItemDto> search(User user, String text) {
+    public List<Item> search(User user, String text) {
         if (text.isEmpty()) {
             return new ArrayList<>();
         } else {
             return items.stream()
-                    .filter(i -> i.getDescription() != null
-                            && i.getDescription().toUpperCase().contains(text.toUpperCase())
-                            && i.getAvailable() && !text.isEmpty())
-                    .map(ItemDtoRowMapper::toItemDto)
+                    .filter(item -> item.getDescription() != null
+                            && item.getAvailable() != null
+                            && item.getDescription().toUpperCase().contains(text.toUpperCase())
+                            && item.getAvailable() && !text.isEmpty())
                     .collect(Collectors.toList());
         }
     }
