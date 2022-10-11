@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -13,26 +14,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAll() {
-        return userRepository.getAll();
+        return userRepository.getAll().stream()
+                .map(UserRowMapper::toUserDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public UserDto create(User user) {
-        return userRepository.create(user);
+    public UserDto create(UserDto userDto) {
+        return UserRowMapper.toUserDto(userRepository.create(UserRowMapper.toUser(userDto)));
     }
 
     @Override
-    public UserDto getById(long userId) {
-        return userRepository.getById(userId);
+    public UserDto getById(Long userId) {
+        return UserRowMapper.toUserDto(userRepository.getById(userId));
     }
 
     @Override
-    public UserDto update(User user, long userId) {
-        return userRepository.update(user, userId);
+    public UserDto update(UserDto userDto, Long userId) {
+        return UserRowMapper.toUserDto(userRepository.update(UserRowMapper.toUser(userDto), userId));
     }
 
     @Override
-    public void delete(long userId) {
+    public void delete(Long userId) {
         userRepository.delete(userId);
     }
 }

@@ -10,7 +10,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Getter
 @Repository
@@ -21,36 +20,36 @@ public class UserRepositoryImpl implements UserRepository {
 
     private final ObjectMapper objectMapper;
 
-    private long userId = 0;
+    private Long userId = 0L;
 
     @Override
-    public UserDto create(User user) {
+    public User create(User user) {
         validateEmail(user.getEmail());
         user.setId(++userId);
         users.add(user);
-        return UserRowMapper.toUserDto(user);
+        return user;
     }
 
     @Override
-    public UserDto getById(long userId) {
-        return UserRowMapper.toUserDto(users.stream()
-                .filter(user -> user.getId() == userId)
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("User not found")));
-    }
-
-    @Override
-    public List<UserDto> getAll() {
+    public User getById(Long userId) {
+        final long finalUserId = userId;
         return users.stream()
-                .map(UserRowMapper::toUserDto)
-                .collect(Collectors.toList());
+                .filter(user -> user.getId() == finalUserId)
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 
     @Override
-    public UserDto update(User user, long userId) {
+    public List<User> getAll() {
+        return users;
+    }
+
+    @Override
+    public User update(User user, Long userId) {
         validateEmail(user.getEmail());
+        final long finaUserId = userId;
         User userToUpdate = users.stream()
-                .filter(u -> u.getId() == userId)
+                .filter(u -> u.getId() == finaUserId)
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
@@ -65,11 +64,12 @@ public class UserRepositoryImpl implements UserRepository {
         delete(userToUpdate.getId());
         users.add(userToUpdate);
 
-        return UserRowMapper.toUserDto(userToUpdate);
+        return userToUpdate;
     }
 
-    public void delete(long userId) {
-        users.removeIf(user -> user.getId() == userId);
+    public void delete(Long userId) {
+        final long finalUserId = userId;
+        users.removeIf(user -> user.getId() == finalUserId);
     }
 
     private void validateEmail(String email) {
