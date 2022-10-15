@@ -18,17 +18,17 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto create(Long userId, ItemDto itemDto) {
-        return ItemDtoRowMapper.toItemDto(itemRepository.create(getUser(userId), ItemDtoRowMapper.toItem(itemDto)));
+        return ItemRowMapper.toItemDto(itemRepository.create(getUser(userId), ItemRowMapper.toItem(itemDto)));
     }
 
     @Override
     public ItemDto update(Long userId, ItemDto itemDto, Long itemId) {
-        return ItemDtoRowMapper.toItemDto(itemRepository.update(getUser(userId), ItemDtoRowMapper.toItem(itemDto), itemId));
+        return ItemRowMapper.toItemDto(itemRepository.update(getUser(userId), ItemRowMapper.toItem(itemDto), itemId));
     }
 
     @Override
     public ItemDto getById(Long userId, Long id) {
-        return ItemDtoRowMapper.toItemDto(itemRepository.getById(getUser(userId), id));
+        return ItemRowMapper.toItemDto(itemRepository.getById(getUser(userId), id));
     }
 
     @Override
@@ -37,7 +37,7 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.getAll(userId)
                 .stream()
                 .filter(i -> i.getOwner().getId() == finalUserId)
-                .map(ItemDtoRowMapper::toItemDto)
+                .map(ItemRowMapper::toItemDto)
                 .collect(Collectors.toList());
     }
 
@@ -45,7 +45,7 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> search(Long userId, String text) {
         return itemRepository.search(getUser(userId), text)
                 .stream()
-                .map(ItemDtoRowMapper::toItemDto).collect(Collectors.toList());
+                .map(ItemRowMapper::toItemDto).collect(Collectors.toList());
     }
 
     private User getUser(Long userId) {
