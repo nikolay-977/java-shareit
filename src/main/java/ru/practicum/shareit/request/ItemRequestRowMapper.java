@@ -4,20 +4,20 @@ import ru.practicum.shareit.user.UserRowMapper;
 
 public class ItemRequestRowMapper {
     public static ItemRequestDto toItemRequestDto(ItemRequest itemRequest) {
-        return new ItemRequestDto(
-                itemRequest.getId(),
-                itemRequest.getDescription(),
-                itemRequest.getRequestor() != null ? UserRowMapper.toUserDto(itemRequest.getRequestor()) : null,
-                itemRequest.getCreated()
-        );
+        return ItemRequestDto.builder()
+                .id(itemRequest.getId())
+                .description(itemRequest.getDescription())
+                .requestorDto(itemRequest.getRequestor() != null ? UserRowMapper.toUserDto(itemRequest.getRequestor()) : null)
+                .created(itemRequest.getCreated())
+                .build();
     }
 
     public static ItemRequest toItemRequest(ItemRequestDto itemRequestDto) {
-        return new ItemRequest(
-                itemRequestDto.getId(),
-                itemRequestDto.getDescription(),
-                itemRequestDto.getRequestorDto() != null ? UserRowMapper.toUser(itemRequestDto.getRequestorDto()) : null,
-                itemRequestDto.getCreated()
-        );
+        return ItemRequest.builder()
+                .id(itemRequestDto.getId())
+                .description(itemRequestDto.getDescription())
+                .requestor(itemRequestDto.getRequestorDto() != null ? UserRowMapper.toUser(itemRequestDto.getRequestorDto()) : null)
+                .created(itemRequestDto.getCreated())
+                .build();
     }
 }
