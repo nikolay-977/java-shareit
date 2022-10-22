@@ -11,6 +11,8 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 @Builder
 public class ItemDto {
     private Long id;
@@ -23,5 +25,7 @@ public class ItemDto {
     @NotNull
     private Boolean available;
     @JsonProperty("owner")
+    @EqualsAndHashCode.Exclude
     private UserDto ownerDto;
+    private Long requestId;
 }

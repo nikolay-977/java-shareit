@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BookingDto {
@@ -25,7 +27,9 @@ public class BookingDto {
     private LocalDateTime end;
     private BookingState status;
     @JsonProperty("booker")
+    @EqualsAndHashCode.Exclude
     private UserDto bookerDto;
     @JsonProperty("item")
+    @EqualsAndHashCode.Exclude
     private ItemDto itemDto;
 }
