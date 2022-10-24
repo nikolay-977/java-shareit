@@ -19,6 +19,7 @@ public class ItemRowMapper {
                 .description(item.getDescription())
                 .available(item.getAvailable())
                 .ownerDto(item.getOwner() != null ? UserRowMapper.toUserDto(item.getOwner()) : null)
+                .requestId(item.getItemRequest() != null ? item.getItemRequest().getId() : null)
                 .build();
     }
 
